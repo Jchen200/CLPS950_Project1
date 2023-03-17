@@ -32,6 +32,7 @@ num_cells = 0;
 
 
 
+
 %we need to fill in the cells as a singlular color so that it will be
 %counted as one cell.
 %filled_image = imfill(~binary_image, 'holes');
