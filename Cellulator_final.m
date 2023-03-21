@@ -48,6 +48,17 @@ for iter = 1:x
                 for iter3 = current_queue_row:current_queue_row+1
                     for iter4 = current_queue_column:current_queue_column+1;
                         if iter3 <= x && iter3 >= 1 && iter4 <= y && iter4 >= 1
+                            if binary_image(iter3,iter4) == 0 && labeled_image(iter3,iter4) == 0
+                                queue(end+1,1) = [iter3,iter4];
+                                matrix_image(iter3,iter4) = num_cells;
+                                pixel_count = pixel_count + 1;
+                            end
+                        end
+                    end
+                end
+            end
+            total_pixels_in_cells = pixel_count*num_cells
+            
                             
 
 
