@@ -31,14 +31,26 @@ num_cells = 0;
 
 %we want to write a loop that will go through each of the pixels of the
 %binary image and check if it is part of a cell.
-for a = 1:height
-    for b = 1:width
-        if binary_image(a,b) == 0 && matrix_image(a,b) == 0
+for iter = 1:x
+    for iter2 = 1:y
+        if binary_image(iter,iter2) == 0 && matrix_image(iter,iter2) == 0
             num_cells = num_cells + 1;
-            queue = [a,b];
+            queue = [iter,iter2];
             pixel_count = 0;
             max_count = x*y;
             while ~isempty(queue) && pixel_count < max_count
+                current_queue = queue(1,1):
+                queue(1,1) = [];
+                current_queue_row = current_queue(1);
+                current_queue_column = current_queue(2);
+                matrix_image(current_queue_row, current_queue_column)= num_cells;
+                pixel_count = 1+pixel_count;
+                for iter3 = current_queue_row:current_queue_row+1
+                    for iter4 = current_queue_column:current_queue_column+1;
+                        if iter3 <= x && iter3 >= 1 && iter4 <= y && iter4 >= 1
+                            
+
+
 
             
 
