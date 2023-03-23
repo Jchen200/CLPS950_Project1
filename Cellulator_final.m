@@ -97,8 +97,4 @@ end
             axis off;
 
             title(sprintf('Total Cell Count: %d\nConcentration: %d cells/mL', num_cells, concentration));
-            
-
-
-
-            
+         
