@@ -39,27 +39,27 @@ num_cells = 0;
 
 %we want to write a loop that will go through each of the pixels of the
 %binary image and check if it is part of a cell.
-for iter = 1:x
+for iter = 1:x   %loop through each pixel in the binary image
     for iter2 = 1:y
         if binary_image(iter,iter2) == 0 && matrix_image(iter,iter2) == 0
-            num_cells = num_cells + 1;
-            queue = [iter,iter2];
-            pixel_count = 0;
+            num_cells = num_cells + 1; %increment the cell counter if the pixel hasn't been labeled yet
+            queue = [iter,iter2]; %holds the coordinates of the current pixel
+            pixel_count = 0; %initialize the cell size based on pixels counter
             max_count = x*y;
             while ~isempty(queue) 
-                current_queue = queue(1,:);
+                current_queue = queue(1,:); %first coordinate from queue
                 queue(1,:) = [];
                 current_queue_row = current_queue(1);
                 current_queue_column = current_queue(2);
-                matrix_image(current_queue_row, current_queue_column)= num_cells;
-                pixel_count = 1+pixel_count;
-                for iter3 = current_queue_row-1:current_queue_row+1
+                matrix_image(current_queue_row, current_queue_column)= num_cells; %label current pixel
+                pixel_count = 1+pixel_count; %increment cell size based on pixels counter
+                for iter3 = current_queue_row-1:current_queue_row+1 %check neighboring pixels
                     for iter4 = current_queue_column-1:current_queue_column+1;
-                        if iter3 <= x && iter3 >= 1 && iter4 <= y && iter4 >= 1
-                            if binary_image(iter3,iter4) == 0 && matrix_image(iter3,iter4) == 0
-                                queue(end+1,:) = [iter3,iter4];
-                                matrix_image(iter3,iter4) = num_cells;
-                                pixel_count = pixel_count + 1;
+                        if iter3 <= x && iter3 >= 1 && iter4 <= y && iter4 >= 1 %make sure it is within the bounds of the matrix
+                            if binary_image(iter3,iter4) == 0 && matrix_image(iter3,iter4) == 0 %if neighboring pixel is part of cell and hasn't been counted yet
+                                queue(end+1,:) = [iter3,iter4]; %add it to the queue
+                                matrix_image(iter3,iter4) = num_cells; %label the neigboring pixel
+                                pixel_count = pixel_count + 1; %increment the cell size based on pixels counter
                             end
                         end
                     end
@@ -88,7 +88,7 @@ end
             %display the total cell count and concentration of the image as
             %a figure
             fprintf('Total Cell Count: %d\n', num_cells);
-            disp(['Cell Concentration = ', num2str(concentration), 'cells/mL']);
+            disp(['Cell Concentration = ', num2str(concentration), ' cells/mL']);
             figure;
             colormap(gray);
             imagesc(matrix_image);
