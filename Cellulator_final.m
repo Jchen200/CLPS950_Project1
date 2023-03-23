@@ -9,7 +9,6 @@ imshow(grayimage);
 %using a 2D median filtering command to remove the background noise, which
 %allows us to ignore any non-cellular components in the image
 noise_removal = medfilt2(grayimage);
-
 imshow(noise_removal);
 
 
@@ -82,7 +81,7 @@ end
 
 
             %calculate the cell concentration 
-            volume = 20;
+            volume = 20; %in microliters
             end_volume = volume/1000;
             concentration = num_cells/end_volume;
 
