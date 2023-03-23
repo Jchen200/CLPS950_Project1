@@ -1,4 +1,4 @@
-image = imread('/Users/josephinechen/Downloads/cell.png');
+image = imread('/Users/jacquelinecho/Downloads/cell.png');
 
 %first, we are loading the image in grayscale to remove any colors that
 %would disrupt cell counting.
@@ -22,6 +22,14 @@ threshold = graythresh(noise_removal);
 %then, we binarize the image using the threshold.
 binary_image = imbinarize(noise_removal,threshold);
 imshow(binary_image)
+
+%to correct the cell count to be more accurate, we want to calculate a
+%minimum and maximum size threshold for the cells
+statistics = regionprops('table', binary_image, 'Area');
+mean_size = mean(statistics.Area);
+standard_deviation_size = std(statistics.Area);
+minimum_size_threshold = mean_size - standard_deviation_size;
+maximum_size_threshold = mean_size + standard_deviation_size;
 
 %convert the image into a matrix with zeros. we can use this matrix to
 %track the number of pixels that belong in an individual cell. then, we
@@ -49,7 +57,7 @@ for iter = 1:x
                 for iter3 = current_queue_row-1:current_queue_row+1
                     for iter4 = current_queue_column-1:current_queue_column+1;
                         if iter3 <= x && iter3 >= 1 && iter4 <= y && iter4 >= 1
-                            if binary_image(iter3,iter4) == 0 && labeled_image(iter3,iter4) == 0
+                            if binary_image(iter3,iter4) == 0 && matrix_image(iter3,iter4) == 0
                                 queue(end+1,:) = [iter3,iter4];
                                 matrix_image(iter3,iter4) = num_cells;
                                 pixel_count = pixel_count + 1;
@@ -58,22 +66,37 @@ for iter = 1:x
                     end
                 end
             end
+             %check to see if the identified cells are within the minimum
+            %and maximum size threshold
+            if pixel_count < minimum_size_threshold 
+                matrix_image(matrix_image == num_cells) = 0;
+                num_cells = num_cells - 1; 
+            end
+            if pixel_count > maximum_size_threshold
+                matrix_image(matrix_image == num_cells) = 0;
+                num_cells = num_cells + 4;
+            end
         end
     end
 end
 
-            total_pixels_in_cells = pixel_count*num_cells;
-            average_pxels_in_cells = total_pixels_in_cells/num_cells;
 
+            %calculate the cell concentration 
             volume = 20;
             end_volume = volume/1000;
             concentration = num_cells/end_volume;
 
-
+            %display the total cell count and concentration of the image as
+            %a figure
             fprintf('Total Cell Count: %d\n', num_cells);
             disp(['Cell Concentration = ', num2str(concentration), 'cells/mL']);
             figure;
             colormap(gray);
+            imagesc(matrix_image);
+            title('Cell Count and Concentration');
+            axis off;
+
+            title(sprintf('Total Cell Count: %d\nConcentration: %d cells/mL', num_cells, concentration));
             
 
 
